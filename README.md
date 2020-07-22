@@ -10,9 +10,13 @@
 
 - [How git works](#How-git-works)
 
-- [git log](#git-log)
+- [Log](#log)
+  - [git log](#git-log)
+  - [git reflog](#git-reflog)
+  - [git blame](#git-blame)
+  - [git cherry-pick](#git-cherry-pick)
 
-- [Correct an error](#Correct-an-error)
+* [Correct an error](#Correct-an-error)
 
   - [Created a Branch by error](#Created-a-Branch-by-error)
   - [Added to Master Branch by mistake?](#Added-to-Master-Branch-by-mistake?)
@@ -23,7 +27,7 @@
   - [Pushed the wrong files to GitHub](#Pushed-the-wrong-files-to-GitHub)
     - [git revert](#git-revert)
 
-- [SSH Key](#SSH-Key)
+* [SSH Key](#SSH-Key)
   - [Creating your SSH Key](#Creating-your-SSH-Key)
 
 ---
@@ -194,9 +198,16 @@ Git push    Git Pull
 
 With `git add` you add files, folders,... to the stage which will be added to your change when you commit
 
+# Log
+
+- [git log](#git-log)
+- [git reflog](#git-reflog)
+- [git blame](#git-blame)
+- [git cherry-pick](#git-cherry-pick)
+
 ## git log
 
-We use git log to get information about the commit history of the project.
+We use git log to get information about the commit history of the project. `git log` will show the latest commit on the first place.
 
 ```
 $ git log
@@ -240,6 +251,66 @@ Then we get the information about when the commit was made.
 
 => finished the quizapp  
 And finally we get the commit message.
+
+## git reflog
+
+`reflog` will keep a history of what you did in that repository:
+
+```
+$ git reflog
+
+7eb8f6c (HEAD -> master, origin/master, origin/HEAD) HEAD@{0}: commit: SSH creation
+
+d1affdb HEAD@{1}: commit: Creation of a git github cheat sheet (point errors)
+
+6f3aec3 HEAD@{2}: clone: from https://github.com/danyweis/gitAndGitHub.git
+
+```
+
+We will have as wel the SHA on the beginning which will be useful to go back to that point with:
+
+```
+$ git checkout d1affdb
+```
+
+## git blame
+
+OK `git blame` will show you the full document with every line and tell you who changed which line and when it was changed and it will give you the SHA of the commit when it was committed! I will not show the full outcome but just a few lines of this document:
+
+_(It will show you the full terminal page and if you look at the bottom you will see **":"** if you press enter it will show you the next line)_
+
+**If you wat to quit you need to type :q**
+
+```
+$ git blame nameOfTheFile
+
+
+d1affdb3 (danyweis 2020-07-21 22:23:28 +0100   1) # Git and GitHub Cheat Sheet
+d1affdb3 (danyweis 2020-07-21 22:23:28 +0100   2)
+d1affdb3 (danyweis 2020-07-21 22:23:28 +0100   3) - [Initialize Git in a Folder](#Initialize-Git-in-a-Folder)
+7eb8f6c9 (danyweis 2020-07-22 17:45:18 +0100   4)
+d1affdb3 (danyweis 2020-07-21 22:23:28 +0100   5) - [How the branches work](#How-the-branches-work)
+7eb8f6c9 (danyweis 2020-07-22 17:45:18 +0100   6)
+
+......
+
+7eb8f6c9 (danyweis 2020-07-22 17:45:18 +0100 483) Now you **SSH Key** is generated and you will find it in the location you wanted or in the default location. For me it was **/home/yourPcsName/.ssh/id_rsa**
+d1affdb3 (danyweis 2020-07-21 22:23:28 +0100 484)
+7eb8f6c9 (danyweis 2020-07-22 17:45:18 +0100 485) There you will have a private and a public key in that folder.
+7eb8f6c9 (danyweis 2020-07-22 17:45:18 +0100 486) **Do NEVER expose the private key**, what you now want to do is to copy your public key then go to your GitHub account, 'settings', 'SSH and GPG keys' and there click on _New SSH Key_, give it a title (Name of your machine) and past the key below and then click on **Add SSH Key**.
+```
+
+## git cherry-pick
+
+If you don't want to merge two branches and only want to take a specific commit of an other branch then you can use `git cherry-pick`
+
+What you want to do is to go on the branch and do a `git log` then copy the SHA of the commit which interests you and go back to the master branch (or other) and then put that commit in front of the last commit _(This will duplicate the chosen commit in you log history)_.
+
+You can even take multiple SHA's
+
+```
+$ git cherry-pick 6f3aec3 d1affdb
+```
 
 # Correct an error
 
@@ -413,9 +484,11 @@ $ git add forgottenFile.txt
 $ git commit --amend --no-edit
 ```
 
-`--no-edit` is to tell git we dont want to change the message.
+`--no-edit` is to tell git we don't want to change the message.
 
 ## Pushed the wrong files to GitHub
+
+#### git revert
 
 In this case we can create a new commit which will cancel the old one.
 
@@ -443,7 +516,7 @@ REVERT                   ---- > ----
 
 _**Before making a `git revert` make sure that the team you are working with knows that you made a mistake so you can do the revert with no problem.**_
 
-Revert does a kind of _undo_ while creating a ne commit
+Revert does a kind of _undo_ while creating a new commit
 
 # SSH Key
 
