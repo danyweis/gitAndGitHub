@@ -1,12 +1,30 @@
 # Git and GitHub Cheat Sheet
 
 - [Initialize Git in a Folder](#Initialize-Git-in-a-Folder)
+
 - [How the branches work](#How-the-branches-work)
+
 - [Creating a new branch and moving on it](#Creating-a-new-branch-and-moving-on-it)
+
 - [Create a Commit](#Create-a-Commit)
-- [Correct an error](#Correct-an-error)
+
 - [How git works](#How-git-works)
-- [Created a Branch by error](#Created-a-Branch-by-error)
+
+- [git log](#git-log)
+
+- [Correct an error](#Correct-an-error)
+
+  - [Created a Branch by error](#Created-a-Branch-by-error)
+  - [Added to Master Branch by mistake?](#Added-to-Master-Branch-by-mistake?)
+  - [Committed on the master branch by error](#Committed-on-the-master-branch-by-error)
+    - [git reset](#git-reset)
+  - [Change the commit message](#Change-the-commit-message)
+  - [Forgot to add a file to the last commit](#Forgot-to-add-a-file-to-the-last-commit)
+  - [Pushed the wrong files to GitHub](#Pushed-the-wrong-files-to-GitHub)
+    - [git revert](#git-revert)
+
+- [SSH Key](#SSH-Key)
+  - [Creating your SSH Key](#Creating-your-SSH-Key)
 
 ---
 
@@ -125,7 +143,7 @@ _// This will create a branch only on your local machine so lets have a look at 
 ```
 $ git branch
 * master
-colorText
+  colorText
 ```
 
 _// OK now we have two branches but we are still on the master (remember the \*) so lets move to the colorText branch._
@@ -133,7 +151,7 @@ _// OK now we have two branches but we are still on the master (remember the \*)
 ```
 $ git checkout colorText
 $ git branch
-master
+  master
 * colorText
 ```
 
@@ -176,6 +194,293 @@ Git push    Git Pull
 
 With `git add` you add files, folders,... to the stage which will be added to your change when you commit
 
-## Correct an error
+## git log
 
-### Created a Branch by error
+We use git log to get information about the commit history of the project.
+
+```
+$ git log
+
+commit 5e1e9194ea2922e88fc0672d7bf24f745dbc0cf7 (HEAD -> testBranch, origin/master, master)
+Author: yourname <youremaill@mail.com>
+Date:   Sun Jul 5 12:03:20 2020 +0100
+
+    finished the quizapp
+
+commit 3e8ec86bc6d107cd3a7f7faa8c1ed37b36ffeccd
+Author: yourname <youremail@mail.com>
+Date:   Sat Jul 4 18:51:22 2020 +0100
+
+    init
+
+```
+
+Now if we have a look at this we get a lot of information:
+
+=> commit 5e1e9194ea2922e88fc0672d7bf24f745dbc0cf7  
+ this is the SHA of the commit needed to come back to that point
+
+=> (HEAD -> testBranch, origin/master, master)
+
+- HEAD tell us on what branch we are, in this case we are on the testBranch
+
+- origin/master is the master branch on the local machine you are working on
+
+- master is the branch which is there as well next to the test branch.
+
+In case we would be on the master branch we would get this as result:
+
+`(HEAD -> master, origin/master, testBranch)`
+
+=> Author: yourname < youremaill@mail.com>  
+Here we get the information about the person who created the commit, there will be you name and you provided email address.
+
+=> Date: Sun Jul 5 12:03:20 2020 +0100  
+Then we get the information about when the commit was made.
+
+=> finished the quizapp  
+And finally we get the commit message.
+
+# Correct an error
+
+## Created a Branch by error
+
+If you created a branch which you finally didn't use then the best thing is to delete that branch . You can do that by using this command:
+
+```
+$ git branch -d nameOfTheBranch
+```
+
+## Added to Master Branch by mistake?
+
+Now we have modified our README.md in our quiz-app repository and we added it to the master branch
+Now lets do `git status` to see what happened!
+
+```
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   README.md
+```
+
+If the changes where added but not yet committed then NO PANIC we can repair that.
+
+Now we have to `git stash` to record the current state of the working directory and the index, so that we can then go back to a clean working directory (master branch).
+
+```
+$ git stash
+Saved working directory and index state WIP on master: 5e1e919 finished the quizapp
+```
+
+And if we do now `git status` we get:
+
+```
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+```
+
+Now lets create a side branch move on it and then bring the record to that branch.
+
+```
+$ git branch testBranch
+$ git checkout testBranch
+Switched to branch 'testBranch'
+
+$ git branch
+  master
+* testBranch
+```
+
+Now there are two ways to get the record now on the branch.
+
+```
+$ git stash apply
+```
+
+this will add the last record to the current branch but if you made more then one record and don't want to add the last one then you can use `git stash list` to get the list of all the records (In this case we only have one).
+
+```
+$ git stash list
+stash@{0}: WIP on master: 5e1e919 finished the quizapp
+```
+
+Then hen we know which record we want to apply to the branch we then can do:
+
+```
+$ git stash apply stash@{0}
+
+On branch testBranch
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+```
+
+## Committed on the master branch by error
+
+[All the git reset versions](#git-reset)
+
+Now if you committed on the master branch by mistake and want to delete the last commit and bring that commit to a side branch, then lets see how we can do that:
+
+First we need some information about the last commit we can get that information by using [git log](#git-log). The result will look like this:
+
+Then we have to make sure to copy the SHA and when we have tha done then we can:
+
+```
+$ git reset --hard HEAD^
+$ git branch newBranch
+$ git checkout newBranch
+```
+
+`HEAD^` means we want to delete the last commit on the current branch.
+
+When we have created a new branch and we are on that branch or even if it is an existing branch then we can reset the commit on that branch. To do the reset we only need the first 8 characters of the SHA.
+
+```
+$ git reset --hard 3e8ec86b
+```
+
+## git reset
+
+- [--hard](#hard)
+- [--mixed](#mixed)
+- [--soft](#soft)
+
+#### --hard
+
+If you want to do a `--hard` reset make sure that you really want to do that and if you are sure then make again sure that you are sure! This command can bring you back to any commit but everything between now and that commit will be **gone**.
+
+OK so we have to do:
+
+```
+$ git reset theCommitYouWantToGo --hard
+```
+
+Again this command will forget everything between the commit you want to go to and now. Make 5 times sure that you need to do a hard reset before pressing enter!
+
+#### --mixed
+
+Then we have the `--mixed` reset which will come back before the last commit or you can chose what commit you want to go back to without deleting anything. This creates a detached HEAD.
+
+_If you do not specify anything after the reset it will be a --mixed by default._
+
+So we can do:
+
+```
+$ git reset HEAD~
+```
+
+or
+
+```
+$ git reset --mixed HEAD~
+```
+
+#### --soft
+
+Lets Talk about the `--soft` reset. The soft reset wont delete anything and wont change the commit, it will only position you on top of the wanted commit and you can see the code from that moment. If wanted you can crete a branch at that point.
+
+```
+$ git reset backToTheFuture --soft
+```
+
+## Change the commit message
+
+If you did a typo on your last commit or you forgot to describe something in the commit, then there is a way to change the last commit message.
+
+```
+$ git commit --amend -m "This will be your new message for the last commit"
+```
+
+`--amend` is used to modify the last. commit  
+`-m` is used to transmit the message.
+
+## Forgot to add a file to the last commit
+
+If you forgot to add a file to the last commit you first have to add the file and then you can commit again:
+
+```
+$ git add forgottenFile.txt
+$ git commit --amend --no-edit
+```
+
+`--no-edit` is to tell git we dont want to change the message.
+
+## Pushed the wrong files to GitHub
+
+In this case we can create a new commit which will cancel the old one.
+
+```
+git revert HEAD^
+```
+
+#### Best practice is to use:
+
+`git reset` to make changes locally (changes are not yet committed)
+
+```
+RESET                        --<--
+                           /      \
+-----[ ]-------[ ]-------[ ]-------[ ]
+```
+
+`git revert` to make changes publicly (changes were already committed)
+
+```
+REVERT                   ---- > ----
+                        /           \
+-----[ ]-----[ ]-----[ ]-----[ ]-----[ ]
+```
+
+_**Before making a `git revert` make sure that the team you are working with knows that you made a mistake so you can do the revert with no problem.**_
+
+Revert does a kind of _undo_ while creating a ne commit
+
+# SSH Key
+
+## Creating your SSH Key
+
+The SSH key is used to connect you PC to GitHub so you don't need to type your password anymore when you push to GitHub.
+
+To generate a key we use:
+
+You will be asked first **location for the SSH key** (for me the default is fine) then it will ask if you want to **protect the key with a password** if yes then you will now have to type in you password or just type enter and then a second time type your password or again press enter.
+
+```
+$ ssh-keygen
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/yourPcsName/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/yourPcsName/.ssh/id_rsa
+Your public key has been saved in /home/yourPcsName/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:BPrOHfN6IMyhuwehf89iew3Qh3nPCZxbklLHBNNq+I yourPcsName@thinkcode
+The key's randomart image is:
++---[RSA 3072]----+
+|      -=       =+|
+|     . .      . =|
+|.   .  -.    . B.|
+| o   . .      B+=|
+|. +  o. S  ..ooB+|
+| = o o+..+--.o+..|
+|o   o +o..oE  . .|
+|     +..oE.    . |
+|     .+oo.       |
++----[SHA256]-----+
+```
+
+Now you **SSH Key** is generated and you will find it in the location you wanted or in the default location. For me it was **/home/yourPcsName/.ssh/id_rsa**
+
+There you will have a private and a public key in that folder.  
+**Do NEVER expose the private key**, what you now want to do is to copy your public key then go to your GitHub account, 'settings', 'SSH and GPG keys' and there click on _New SSH Key_, give it a title (Name of your machine) and past the key below and then click on **Add SSH Key**.
