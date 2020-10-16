@@ -32,7 +32,32 @@
 
 ---
 
-#### When installing git on the device!
+## Installing git on the device!
+
+### The install on Linux
+
+###### Fedors based with dnf:
+
+```
+$ sudo dnf install git-all
+```
+
+###### Debian based with apt:
+
+```
+$ sudo apt install git-all
+```
+##### What version of git are you running?
+
+_// To kow what version of git is installed you ahe to run the command_
+
+```
+$ git --version
+```
+
+_// If you work with MacOS or Windows please refer to this page: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git_
+
+### After Git is installed
 
 ```
 $ git config --global user.name "Your Name"
@@ -87,7 +112,7 @@ $ git remote add GGH https://github.com/danyweis/gitAndGitHub.git
 
 _**GGH** is a short name to use to call the repository of the position of the repository **This is not a clone yet!**._
 
-_// Now we will clone the project to our local machine._
+_// Now we will clone the project to our local machine. **Our own project or an other one**_
 
 ```
 $ git clone https://github.com/danyweis/gitAndGitHub.git
