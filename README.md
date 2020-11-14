@@ -1,5 +1,7 @@
 # Git and GitHub Cheat Sheet
 
+#### IMPORTANT: => If I talk about the "master" branch, that did now change it is now "main" branch
+
 - [Initialize Git in a Folder](#Initialize-Git-in-a-Folder)
 
 - [How the branches work](#How-the-branches-work)
