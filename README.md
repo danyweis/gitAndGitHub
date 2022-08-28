@@ -568,15 +568,15 @@ The key fingerprint is:
 SHA256:BPrOHfN6IMyhuwehf89iew3Qh3nPCZxbklLHBNNq+I yourPcsName@thinkcode
 The key's randomart image is:
 +---[RSA 3072]----+
-|      -=       =+|
-|     . .      . =|
-|.   .  -.    . B.|
-| o   . .      B+=|
-|. +  o. S  ..ooB+|
-| = o o+..+--.o+..|
+|      ===      =+|
+|     . +      . =|
+|.   . .+.    . B.|
+| o   .===     B+=|
+|. +  o. B  ..ooB+|
+| = o o++++--.o+..|
 |o   o +o..oE  . .|
-|     +..oE.    . |
-|     .+oo.       |
+|     ++.oE.    . |
+|     .+++.       |
 +----[SHA256]-----+
 ```
 
