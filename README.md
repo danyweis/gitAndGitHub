@@ -565,7 +565,7 @@ Enter same passphrase again:
 Your identification has been saved in /home/yourPcsName/.ssh/id_rsa
 Your public key has been saved in /home/yourPcsName/.ssh/id_rsa.pub
 The key fingerprint is:
-SHA256:BPrOHfN6IMyhuwehf89iew3Qh3nPCZxbklLHBNNq+I yourPcsName@thinkcode
+SHA256:BPrOHfN6IMyhuwe123456748953nPCZxbklLHBNNq+I yourPcsName@thinkcode
 The key's randomart image is:
 +---[RSA 3072]----+
 |      ===      =+|
